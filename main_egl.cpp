@@ -1,6 +1,4 @@
 #include <EGL/egl.h>
-#include <GL/glew.h>
-#include <iostream>
 
 static const EGLint configAttribs[] = {
           EGL_SURFACE_TYPE, EGL_PBUFFER_BIT,
@@ -50,12 +48,6 @@ int main(int argc, char *argv[])
   eglMakeCurrent(eglDpy, eglSurf, eglSurf, eglCtx);
 
   // from now on use your OpenGL context
-  glewExperimental = GL_TRUE;
-  bool successGlew = glewInit();
-  if ( successGlew == GLEW_OK )
-    std::cout << "glew was initialized correctly" << std::endl;
-  else
-    std::cout << "something went wrong while initializing glew" << std::endl;
 
   // 6. Terminate EGL when finished
   eglTerminate(eglDpy);
