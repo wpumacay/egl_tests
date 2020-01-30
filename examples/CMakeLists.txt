@@ -1,0 +1,1 @@
+message( "egl_tests::examples >>> configuring examples" )
