@@ -1,5 +1,5 @@
-#include <EGL/egl.h>
-#include <GL/glew.h>
+#include <glad/egl.h>
+#include <glad/gl.h>
 #include <iostream>
 
 static const EGLint configAttribs[] = {
@@ -12,8 +12,8 @@ static const EGLint configAttribs[] = {
           EGL_NONE
   };
 
-  static const int pbufferWidth = 9;
-  static const int pbufferHeight = 9;
+  static const int pbufferWidth = 800;
+  static const int pbufferHeight = 600;
 
   static const EGLint pbufferAttribs[] = {
         EGL_WIDTH, pbufferWidth,
@@ -23,12 +23,32 @@ static const EGLint configAttribs[] = {
 
 int main(int argc, char *argv[])
 {
+  // 0. Load egl-functions using glad (without egl-display first)
+  int egl_version = gladLoaderLoadEGL( NULL );
+  if ( !egl_version )
+  {
+    std::cout << "something went wrong while loading glad-egl functions  (no egl-display)" << std::endl;
+    exit( 1 );
+  }
+
   // 1. Initialize EGL
   EGLDisplay eglDpy = eglGetDisplay(EGL_DEFAULT_DISPLAY);
 
   EGLint major, minor;
 
-  eglInitialize(eglDpy, &major, &minor);
+  if ( !eglInitialize(eglDpy, &major, &minor) )
+  {
+    std::cout << "Unable to initialize EGL" << std::endl;
+    exit( 2 );
+  }
+
+  // 1.1. Reload egl-functions using glad
+  egl_version = gladLoaderLoadEGL( eglDpy );
+  if ( !egl_version )
+  {
+    std::cout << "something went wrong while re-loading glad-egl functions" << std::endl;
+    exit( 3 );
+  }
 
   // 2. Select an appropriate configuration
   EGLint numConfigs;
@@ -49,13 +69,14 @@ int main(int argc, char *argv[])
 
   eglMakeCurrent(eglDpy, eglSurf, eglSurf, eglCtx);
 
-  // from now on use your OpenGL context
-  glewExperimental = GL_TRUE;
-  bool successGlew = glewInit();
-  if ( successGlew == GLEW_OK )
-    std::cout << "glew was initialized correctly" << std::endl;
-  else
-    std::cout << "something went wrong while initializing glew" << std::endl;
+  // 5.1 Load gl using glad
+  if ( !gladLoadGL((GLADloadfunc)eglGetProcAddress) )
+  {
+    std::cout << "Failed to load GL using glad in egl-context" << std::endl;
+    exit( 4 );
+  }
+
+  std::cout << "Successfully initialized GLAD and EGL" << std::endl;
 
   // 6. Terminate EGL when finished
   eglTerminate(eglDpy);
