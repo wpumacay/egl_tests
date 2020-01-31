@@ -21,6 +21,13 @@ int GLAD_EGL_VERSION_1_2 = 0;
 int GLAD_EGL_VERSION_1_3 = 0;
 int GLAD_EGL_VERSION_1_4 = 0;
 int GLAD_EGL_VERSION_1_5 = 0;
+int GLAD_EGL_EXT_device_base = 0;
+int GLAD_EGL_EXT_device_enumeration = 0;
+int GLAD_EGL_EXT_device_query = 0;
+int GLAD_EGL_EXT_platform_base = 0;
+int GLAD_EGL_EXT_platform_device = 0;
+int GLAD_EGL_NV_cuda_event = 0;
+int GLAD_EGL_NV_device_cuda = 0;
 
 
 static void _pre_call_egl_callback_default(const char *name, GLADapiproc apiproc, int len_args, ...) {
@@ -143,6 +150,15 @@ static EGLSurface GLAD_API_PTR glad_debug_impl_eglCreatePlatformPixmapSurface(EG
     return ret;
 }
 PFNEGLCREATEPLATFORMPIXMAPSURFACEPROC glad_debug_eglCreatePlatformPixmapSurface = glad_debug_impl_eglCreatePlatformPixmapSurface;
+PFNEGLCREATEPLATFORMPIXMAPSURFACEEXTPROC glad_eglCreatePlatformPixmapSurfaceEXT = NULL;
+static EGLSurface GLAD_API_PTR glad_debug_impl_eglCreatePlatformPixmapSurfaceEXT(EGLDisplay dpy, EGLConfig config, void * native_pixmap, const EGLint * attrib_list) {
+    EGLSurface ret;
+    _pre_call_egl_callback("eglCreatePlatformPixmapSurfaceEXT", (GLADapiproc) glad_eglCreatePlatformPixmapSurfaceEXT, 4, dpy, config, native_pixmap, attrib_list);
+    ret = glad_eglCreatePlatformPixmapSurfaceEXT(dpy, config, native_pixmap, attrib_list);
+    _post_call_egl_callback((void*) &ret, "eglCreatePlatformPixmapSurfaceEXT", (GLADapiproc) glad_eglCreatePlatformPixmapSurfaceEXT, 4, dpy, config, native_pixmap, attrib_list);
+    return ret;
+}
+PFNEGLCREATEPLATFORMPIXMAPSURFACEEXTPROC glad_debug_eglCreatePlatformPixmapSurfaceEXT = glad_debug_impl_eglCreatePlatformPixmapSurfaceEXT;
 PFNEGLCREATEPLATFORMWINDOWSURFACEPROC glad_eglCreatePlatformWindowSurface = NULL;
 static EGLSurface GLAD_API_PTR glad_debug_impl_eglCreatePlatformWindowSurface(EGLDisplay dpy, EGLConfig config, void * native_window, const EGLAttrib * attrib_list) {
     EGLSurface ret;
@@ -152,6 +168,15 @@ static EGLSurface GLAD_API_PTR glad_debug_impl_eglCreatePlatformWindowSurface(EG
     return ret;
 }
 PFNEGLCREATEPLATFORMWINDOWSURFACEPROC glad_debug_eglCreatePlatformWindowSurface = glad_debug_impl_eglCreatePlatformWindowSurface;
+PFNEGLCREATEPLATFORMWINDOWSURFACEEXTPROC glad_eglCreatePlatformWindowSurfaceEXT = NULL;
+static EGLSurface GLAD_API_PTR glad_debug_impl_eglCreatePlatformWindowSurfaceEXT(EGLDisplay dpy, EGLConfig config, void * native_window, const EGLint * attrib_list) {
+    EGLSurface ret;
+    _pre_call_egl_callback("eglCreatePlatformWindowSurfaceEXT", (GLADapiproc) glad_eglCreatePlatformWindowSurfaceEXT, 4, dpy, config, native_window, attrib_list);
+    ret = glad_eglCreatePlatformWindowSurfaceEXT(dpy, config, native_window, attrib_list);
+    _post_call_egl_callback((void*) &ret, "eglCreatePlatformWindowSurfaceEXT", (GLADapiproc) glad_eglCreatePlatformWindowSurfaceEXT, 4, dpy, config, native_window, attrib_list);
+    return ret;
+}
+PFNEGLCREATEPLATFORMWINDOWSURFACEEXTPROC glad_debug_eglCreatePlatformWindowSurfaceEXT = glad_debug_impl_eglCreatePlatformWindowSurfaceEXT;
 PFNEGLCREATESYNCPROC glad_eglCreateSync = NULL;
 static EGLSync GLAD_API_PTR glad_debug_impl_eglCreateSync(EGLDisplay dpy, EGLenum type, const EGLAttrib * attrib_list) {
     EGLSync ret;
@@ -278,6 +303,15 @@ static EGLDisplay GLAD_API_PTR glad_debug_impl_eglGetPlatformDisplay(EGLenum pla
     return ret;
 }
 PFNEGLGETPLATFORMDISPLAYPROC glad_debug_eglGetPlatformDisplay = glad_debug_impl_eglGetPlatformDisplay;
+PFNEGLGETPLATFORMDISPLAYEXTPROC glad_eglGetPlatformDisplayEXT = NULL;
+static EGLDisplay GLAD_API_PTR glad_debug_impl_eglGetPlatformDisplayEXT(EGLenum platform, void * native_display, const EGLint * attrib_list) {
+    EGLDisplay ret;
+    _pre_call_egl_callback("eglGetPlatformDisplayEXT", (GLADapiproc) glad_eglGetPlatformDisplayEXT, 3, platform, native_display, attrib_list);
+    ret = glad_eglGetPlatformDisplayEXT(platform, native_display, attrib_list);
+    _post_call_egl_callback((void*) &ret, "eglGetPlatformDisplayEXT", (GLADapiproc) glad_eglGetPlatformDisplayEXT, 3, platform, native_display, attrib_list);
+    return ret;
+}
+PFNEGLGETPLATFORMDISPLAYEXTPROC glad_debug_eglGetPlatformDisplayEXT = glad_debug_impl_eglGetPlatformDisplayEXT;
 PFNEGLGETPROCADDRESSPROC glad_eglGetProcAddress = NULL;
 static __eglMustCastToProperFunctionPointerType GLAD_API_PTR glad_debug_impl_eglGetProcAddress(const char * procname) {
     __eglMustCastToProperFunctionPointerType ret;
@@ -332,6 +366,51 @@ static EGLBoolean GLAD_API_PTR glad_debug_impl_eglQueryContext(EGLDisplay dpy, E
     return ret;
 }
 PFNEGLQUERYCONTEXTPROC glad_debug_eglQueryContext = glad_debug_impl_eglQueryContext;
+PFNEGLQUERYDEVICEATTRIBEXTPROC glad_eglQueryDeviceAttribEXT = NULL;
+static EGLBoolean GLAD_API_PTR glad_debug_impl_eglQueryDeviceAttribEXT(EGLDeviceEXT device, EGLint attribute, EGLAttrib * value) {
+    EGLBoolean ret;
+    _pre_call_egl_callback("eglQueryDeviceAttribEXT", (GLADapiproc) glad_eglQueryDeviceAttribEXT, 3, device, attribute, value);
+    ret = glad_eglQueryDeviceAttribEXT(device, attribute, value);
+    _post_call_egl_callback((void*) &ret, "eglQueryDeviceAttribEXT", (GLADapiproc) glad_eglQueryDeviceAttribEXT, 3, device, attribute, value);
+    return ret;
+}
+PFNEGLQUERYDEVICEATTRIBEXTPROC glad_debug_eglQueryDeviceAttribEXT = glad_debug_impl_eglQueryDeviceAttribEXT;
+PFNEGLQUERYDEVICESTRINGEXTPROC glad_eglQueryDeviceStringEXT = NULL;
+static const char * GLAD_API_PTR glad_debug_impl_eglQueryDeviceStringEXT(EGLDeviceEXT device, EGLint name) {
+    const char * ret;
+    _pre_call_egl_callback("eglQueryDeviceStringEXT", (GLADapiproc) glad_eglQueryDeviceStringEXT, 2, device, name);
+    ret = glad_eglQueryDeviceStringEXT(device, name);
+    _post_call_egl_callback((void*) &ret, "eglQueryDeviceStringEXT", (GLADapiproc) glad_eglQueryDeviceStringEXT, 2, device, name);
+    return ret;
+}
+PFNEGLQUERYDEVICESTRINGEXTPROC glad_debug_eglQueryDeviceStringEXT = glad_debug_impl_eglQueryDeviceStringEXT;
+PFNEGLQUERYDEVICESEXTPROC glad_eglQueryDevicesEXT = NULL;
+static EGLBoolean GLAD_API_PTR glad_debug_impl_eglQueryDevicesEXT(EGLint max_devices, EGLDeviceEXT * devices, EGLint * num_devices) {
+    EGLBoolean ret;
+    _pre_call_egl_callback("eglQueryDevicesEXT", (GLADapiproc) glad_eglQueryDevicesEXT, 3, max_devices, devices, num_devices);
+    ret = glad_eglQueryDevicesEXT(max_devices, devices, num_devices);
+    _post_call_egl_callback((void*) &ret, "eglQueryDevicesEXT", (GLADapiproc) glad_eglQueryDevicesEXT, 3, max_devices, devices, num_devices);
+    return ret;
+}
+PFNEGLQUERYDEVICESEXTPROC glad_debug_eglQueryDevicesEXT = glad_debug_impl_eglQueryDevicesEXT;
+PFNEGLQUERYDISPLAYATTRIBEXTPROC glad_eglQueryDisplayAttribEXT = NULL;
+static EGLBoolean GLAD_API_PTR glad_debug_impl_eglQueryDisplayAttribEXT(EGLDisplay dpy, EGLint attribute, EGLAttrib * value) {
+    EGLBoolean ret;
+    _pre_call_egl_callback("eglQueryDisplayAttribEXT", (GLADapiproc) glad_eglQueryDisplayAttribEXT, 3, dpy, attribute, value);
+    ret = glad_eglQueryDisplayAttribEXT(dpy, attribute, value);
+    _post_call_egl_callback((void*) &ret, "eglQueryDisplayAttribEXT", (GLADapiproc) glad_eglQueryDisplayAttribEXT, 3, dpy, attribute, value);
+    return ret;
+}
+PFNEGLQUERYDISPLAYATTRIBEXTPROC glad_debug_eglQueryDisplayAttribEXT = glad_debug_impl_eglQueryDisplayAttribEXT;
+PFNEGLQUERYDISPLAYATTRIBKHRPROC glad_eglQueryDisplayAttribKHR = NULL;
+static EGLBoolean GLAD_API_PTR glad_debug_impl_eglQueryDisplayAttribKHR(EGLDisplay dpy, EGLint name, EGLAttrib * value) {
+    EGLBoolean ret;
+    _pre_call_egl_callback("eglQueryDisplayAttribKHR", (GLADapiproc) glad_eglQueryDisplayAttribKHR, 3, dpy, name, value);
+    ret = glad_eglQueryDisplayAttribKHR(dpy, name, value);
+    _post_call_egl_callback((void*) &ret, "eglQueryDisplayAttribKHR", (GLADapiproc) glad_eglQueryDisplayAttribKHR, 3, dpy, name, value);
+    return ret;
+}
+PFNEGLQUERYDISPLAYATTRIBKHRPROC glad_debug_eglQueryDisplayAttribKHR = glad_debug_impl_eglQueryDisplayAttribKHR;
 PFNEGLQUERYSTRINGPROC glad_eglQueryString = NULL;
 static const char * GLAD_API_PTR glad_debug_impl_eglQueryString(EGLDisplay dpy, EGLint name) {
     const char * ret;
@@ -501,6 +580,31 @@ static void glad_egl_load_EGL_VERSION_1_5( GLADuserptrloadfunc load, void* userp
     glad_eglGetSyncAttrib = (PFNEGLGETSYNCATTRIBPROC) load(userptr, "eglGetSyncAttrib");
     glad_eglWaitSync = (PFNEGLWAITSYNCPROC) load(userptr, "eglWaitSync");
 }
+static void glad_egl_load_EGL_EXT_device_base( GLADuserptrloadfunc load, void* userptr) {
+    if(!GLAD_EGL_EXT_device_base) return;
+    glad_eglQueryDeviceAttribEXT = (PFNEGLQUERYDEVICEATTRIBEXTPROC) load(userptr, "eglQueryDeviceAttribEXT");
+    glad_eglQueryDeviceStringEXT = (PFNEGLQUERYDEVICESTRINGEXTPROC) load(userptr, "eglQueryDeviceStringEXT");
+    glad_eglQueryDevicesEXT = (PFNEGLQUERYDEVICESEXTPROC) load(userptr, "eglQueryDevicesEXT");
+    glad_eglQueryDisplayAttribEXT = (PFNEGLQUERYDISPLAYATTRIBEXTPROC) load(userptr, "eglQueryDisplayAttribEXT");
+    glad_eglQueryDisplayAttribKHR = (PFNEGLQUERYDISPLAYATTRIBKHRPROC) load(userptr, "eglQueryDisplayAttribKHR");
+}
+static void glad_egl_load_EGL_EXT_device_enumeration( GLADuserptrloadfunc load, void* userptr) {
+    if(!GLAD_EGL_EXT_device_enumeration) return;
+    glad_eglQueryDevicesEXT = (PFNEGLQUERYDEVICESEXTPROC) load(userptr, "eglQueryDevicesEXT");
+}
+static void glad_egl_load_EGL_EXT_device_query( GLADuserptrloadfunc load, void* userptr) {
+    if(!GLAD_EGL_EXT_device_query) return;
+    glad_eglQueryDeviceAttribEXT = (PFNEGLQUERYDEVICEATTRIBEXTPROC) load(userptr, "eglQueryDeviceAttribEXT");
+    glad_eglQueryDeviceStringEXT = (PFNEGLQUERYDEVICESTRINGEXTPROC) load(userptr, "eglQueryDeviceStringEXT");
+    glad_eglQueryDisplayAttribEXT = (PFNEGLQUERYDISPLAYATTRIBEXTPROC) load(userptr, "eglQueryDisplayAttribEXT");
+    glad_eglQueryDisplayAttribKHR = (PFNEGLQUERYDISPLAYATTRIBKHRPROC) load(userptr, "eglQueryDisplayAttribKHR");
+}
+static void glad_egl_load_EGL_EXT_platform_base( GLADuserptrloadfunc load, void* userptr) {
+    if(!GLAD_EGL_EXT_platform_base) return;
+    glad_eglCreatePlatformPixmapSurfaceEXT = (PFNEGLCREATEPLATFORMPIXMAPSURFACEEXTPROC) load(userptr, "eglCreatePlatformPixmapSurfaceEXT");
+    glad_eglCreatePlatformWindowSurfaceEXT = (PFNEGLCREATEPLATFORMWINDOWSURFACEEXTPROC) load(userptr, "eglCreatePlatformWindowSurfaceEXT");
+    glad_eglGetPlatformDisplayEXT = (PFNEGLGETPLATFORMDISPLAYEXTPROC) load(userptr, "eglGetPlatformDisplayEXT");
+}
 
 
 
@@ -538,7 +642,13 @@ static int glad_egl_find_extensions_egl(EGLDisplay display) {
     const char *extensions;
     if (!glad_egl_get_extensions(display, &extensions)) return 0;
 
-    (void) glad_egl_has_extension;
+    GLAD_EGL_EXT_device_base = glad_egl_has_extension(extensions, "EGL_EXT_device_base");
+    GLAD_EGL_EXT_device_enumeration = glad_egl_has_extension(extensions, "EGL_EXT_device_enumeration");
+    GLAD_EGL_EXT_device_query = glad_egl_has_extension(extensions, "EGL_EXT_device_query");
+    GLAD_EGL_EXT_platform_base = glad_egl_has_extension(extensions, "EGL_EXT_platform_base");
+    GLAD_EGL_EXT_platform_device = glad_egl_has_extension(extensions, "EGL_EXT_platform_device");
+    GLAD_EGL_NV_cuda_event = glad_egl_has_extension(extensions, "EGL_NV_cuda_event");
+    GLAD_EGL_NV_device_cuda = glad_egl_has_extension(extensions, "EGL_NV_device_cuda");
 
     return 1;
 }
@@ -601,6 +711,10 @@ int gladLoadEGLUserPtr(EGLDisplay display, GLADuserptrloadfunc load, void* userp
     glad_egl_load_EGL_VERSION_1_5(load, userptr);
 
     if (!glad_egl_find_extensions_egl(display)) return 0;
+    glad_egl_load_EGL_EXT_device_base(load, userptr);
+    glad_egl_load_EGL_EXT_device_enumeration(load, userptr);
+    glad_egl_load_EGL_EXT_device_query(load, userptr);
+    glad_egl_load_EGL_EXT_platform_base(load, userptr);
 
     return version;
 }
@@ -622,7 +736,9 @@ void gladInstallEGLDebug() {
     glad_debug_eglCreatePbufferSurface = glad_debug_impl_eglCreatePbufferSurface;
     glad_debug_eglCreatePixmapSurface = glad_debug_impl_eglCreatePixmapSurface;
     glad_debug_eglCreatePlatformPixmapSurface = glad_debug_impl_eglCreatePlatformPixmapSurface;
+    glad_debug_eglCreatePlatformPixmapSurfaceEXT = glad_debug_impl_eglCreatePlatformPixmapSurfaceEXT;
     glad_debug_eglCreatePlatformWindowSurface = glad_debug_impl_eglCreatePlatformWindowSurface;
+    glad_debug_eglCreatePlatformWindowSurfaceEXT = glad_debug_impl_eglCreatePlatformWindowSurfaceEXT;
     glad_debug_eglCreateSync = glad_debug_impl_eglCreateSync;
     glad_debug_eglCreateWindowSurface = glad_debug_impl_eglCreateWindowSurface;
     glad_debug_eglDestroyContext = glad_debug_impl_eglDestroyContext;
@@ -637,12 +753,18 @@ void gladInstallEGLDebug() {
     glad_debug_eglGetDisplay = glad_debug_impl_eglGetDisplay;
     glad_debug_eglGetError = glad_debug_impl_eglGetError;
     glad_debug_eglGetPlatformDisplay = glad_debug_impl_eglGetPlatformDisplay;
+    glad_debug_eglGetPlatformDisplayEXT = glad_debug_impl_eglGetPlatformDisplayEXT;
     glad_debug_eglGetProcAddress = glad_debug_impl_eglGetProcAddress;
     glad_debug_eglGetSyncAttrib = glad_debug_impl_eglGetSyncAttrib;
     glad_debug_eglInitialize = glad_debug_impl_eglInitialize;
     glad_debug_eglMakeCurrent = glad_debug_impl_eglMakeCurrent;
     glad_debug_eglQueryAPI = glad_debug_impl_eglQueryAPI;
     glad_debug_eglQueryContext = glad_debug_impl_eglQueryContext;
+    glad_debug_eglQueryDeviceAttribEXT = glad_debug_impl_eglQueryDeviceAttribEXT;
+    glad_debug_eglQueryDeviceStringEXT = glad_debug_impl_eglQueryDeviceStringEXT;
+    glad_debug_eglQueryDevicesEXT = glad_debug_impl_eglQueryDevicesEXT;
+    glad_debug_eglQueryDisplayAttribEXT = glad_debug_impl_eglQueryDisplayAttribEXT;
+    glad_debug_eglQueryDisplayAttribKHR = glad_debug_impl_eglQueryDisplayAttribKHR;
     glad_debug_eglQueryString = glad_debug_impl_eglQueryString;
     glad_debug_eglQuerySurface = glad_debug_impl_eglQuerySurface;
     glad_debug_eglReleaseTexImage = glad_debug_impl_eglReleaseTexImage;
@@ -669,7 +791,9 @@ void gladUninstallEGLDebug() {
     glad_debug_eglCreatePbufferSurface = glad_eglCreatePbufferSurface;
     glad_debug_eglCreatePixmapSurface = glad_eglCreatePixmapSurface;
     glad_debug_eglCreatePlatformPixmapSurface = glad_eglCreatePlatformPixmapSurface;
+    glad_debug_eglCreatePlatformPixmapSurfaceEXT = glad_eglCreatePlatformPixmapSurfaceEXT;
     glad_debug_eglCreatePlatformWindowSurface = glad_eglCreatePlatformWindowSurface;
+    glad_debug_eglCreatePlatformWindowSurfaceEXT = glad_eglCreatePlatformWindowSurfaceEXT;
     glad_debug_eglCreateSync = glad_eglCreateSync;
     glad_debug_eglCreateWindowSurface = glad_eglCreateWindowSurface;
     glad_debug_eglDestroyContext = glad_eglDestroyContext;
@@ -684,12 +808,18 @@ void gladUninstallEGLDebug() {
     glad_debug_eglGetDisplay = glad_eglGetDisplay;
     glad_debug_eglGetError = glad_eglGetError;
     glad_debug_eglGetPlatformDisplay = glad_eglGetPlatformDisplay;
+    glad_debug_eglGetPlatformDisplayEXT = glad_eglGetPlatformDisplayEXT;
     glad_debug_eglGetProcAddress = glad_eglGetProcAddress;
     glad_debug_eglGetSyncAttrib = glad_eglGetSyncAttrib;
     glad_debug_eglInitialize = glad_eglInitialize;
     glad_debug_eglMakeCurrent = glad_eglMakeCurrent;
     glad_debug_eglQueryAPI = glad_eglQueryAPI;
     glad_debug_eglQueryContext = glad_eglQueryContext;
+    glad_debug_eglQueryDeviceAttribEXT = glad_eglQueryDeviceAttribEXT;
+    glad_debug_eglQueryDeviceStringEXT = glad_eglQueryDeviceStringEXT;
+    glad_debug_eglQueryDevicesEXT = glad_eglQueryDevicesEXT;
+    glad_debug_eglQueryDisplayAttribEXT = glad_eglQueryDisplayAttribEXT;
+    glad_debug_eglQueryDisplayAttribKHR = glad_eglQueryDisplayAttribKHR;
     glad_debug_eglQueryString = glad_eglQueryString;
     glad_debug_eglQuerySurface = glad_eglQuerySurface;
     glad_debug_eglReleaseTexImage = glad_eglReleaseTexImage;
